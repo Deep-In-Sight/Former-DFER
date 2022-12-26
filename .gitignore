@@ -1,0 +1,7 @@
+nia/data/*
+*.png
+*__pycache__*
+*.tar.gz
+*checkpoint.ipynb*
+*.ipynb_checkpoints
+wandb

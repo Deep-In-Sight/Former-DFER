@@ -9,7 +9,7 @@ class GenerateModel(nn.Module):
         super().__init__()
         self.s_former = spatial_transformer()
         self.t_former = temporal_transformer()
-        self.fc = nn.Linear(512, 7)
+        self.fc = nn.Linear(512, 5)
 
     def forward(self, x):
 
