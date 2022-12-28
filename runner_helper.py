@@ -140,3 +140,78 @@ class RecorderMeter(object):
             fig.savefig(save_path, dpi=dpi, bbox_inches='tight')
             # print('Curve was saved')
         plt.close(fig)
+
+
+def train(train_loader, model, criterion, optimizer, epoch, args):
+    losses = AverageMeter('Loss', ':.4f')
+    top1 = AverageMeter('Accuracy', ':6.3f')
+    progress = ProgressMeter(len(train_loader),
+                             [losses, top1],
+                             prefix="Epoch: [{}]".format(epoch))
+
+    # switch to train mode
+    model.train()
+
+    for i, (images, target) in enumerate(train_loader):
+        images = images.cuda()
+        target = target.cuda()
+
+        # compute output
+        output = model(images)
+        loss = criterion(output, target)
+
+        # measure accuracy and record loss
+        acc1, _ = accuracy(output, target, topk=(1, 5))
+        losses.update(loss.item(), images.size(0))
+        top1.update(acc1[0], images.size(0))
+
+        # compute gradient and do SGD step
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        # print loss and accuracy
+        if i % args.print_freq == 0:
+            progress.display(i, log_txt_path)
+
+    return top1.avg, losses.avg
+
+
+def validate(val_loader, model, criterion, args):
+    losses = AverageMeter('Loss', ':.4f')
+    top1 = AverageMeter('Accuracy', ':6.3f')
+    progress = ProgressMeter(len(val_loader),
+                             [losses, top1],
+                             prefix='Test: ')
+
+    # switch to evaluate mode
+    model.eval()
+
+    with torch.no_grad():
+        for i, (images, target) in enumerate(val_loader):
+            images = images.cuda()
+            target = target.cuda()
+
+            # compute output
+            output = model(images)
+            loss = criterion(output, target)
+
+            # measure accuracy and record loss
+            acc1, _ = accuracy(output, target, topk=(1, 5))
+            losses.update(loss.item(), images.size(0))
+            top1.update(acc1[0], images.size(0))
+
+            if i % args.print_freq == 0:
+                progress.display(i, log_txt_path)
+
+        # TODO: this should also be done with the ProgressMeter
+        print('Current Accuracy: {top1.avg:.3f}'.format(top1=top1))
+        with open(log_txt_path, 'a') as f:
+            f.write('Current Accuracy: {top1.avg:.3f}'.format(top1=top1) + '\n')
+    return top1.avg, losses.avg
+
+
+def save_checkpoint(state, is_best):
+    torch.save(state, checkpoint_path)
+    if is_best:
+        shutil.copyfile(checkpoint_path, best_checkpoint_path)
