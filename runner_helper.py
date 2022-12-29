@@ -142,7 +142,7 @@ class RecorderMeter(object):
         plt.close(fig)
 
 
-def train(train_loader, model, criterion, optimizer, epoch, args):
+def train(train_loader, model, criterion, optimizer, epoch, log_txt_path, args):
     losses = AverageMeter('Loss', ':.4f')
     top1 = AverageMeter('Accuracy', ':6.3f')
     progress = ProgressMeter(len(train_loader),
@@ -177,7 +177,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     return top1.avg, losses.avg
 
 
-def validate(val_loader, model, criterion, args):
+def validate(val_loader, model, criterion, log_txt_path, args):
     losses = AverageMeter('Loss', ':.4f')
     top1 = AverageMeter('Accuracy', ':6.3f')
     progress = ProgressMeter(len(val_loader),
@@ -211,7 +211,7 @@ def validate(val_loader, model, criterion, args):
     return top1.avg, losses.avg
 
 
-def save_checkpoint(state, is_best):
+def save_checkpoint(state, checkpoint_path, best_checkpoint_path, is_best):
     torch.save(state, checkpoint_path)
     if is_best:
         shutil.copyfile(checkpoint_path, best_checkpoint_path)
