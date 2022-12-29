@@ -23,9 +23,7 @@ mp_face_mesh = mp.solutions.face_mesh
 mp_face_detection = mp.solutions.face_detection
 
 #get_dir
-base = "/media/di/data/500G_backup/nia/Former-DFER/nia/data/"
-#nas_dir='/run/user/1000/gvfs/ftp:host=192.168.0.43/NIA2022/raw/'
-out_dir = ""
+nas_dir='/run/user/1000/gvfs/ftp:host=192.168.0.43/NIA2022/raw/'
 #date = ['1018','1025','1031','1101','1102']
 #devices = ["Laptop", "Monitor", "VehicleLCD", "Smartphone", "Tablet"]
 img_size=(224,224)
@@ -34,9 +32,9 @@ img_size=(224,224)
 #    ll = f.read().split("\n")
 #    ll = [l for l in ll if len(l) > 2 ]
 
-#with open("val_set_Former-DFER.txt", "r") as f:
-#    val_set = f.read().split("\n")
-#    val_set.pop()
+with open("set_1.txt", "r") as f:
+    val_set = f.read().split("\n")
+    val_set.pop()
 
 #val_set_s = [vs for vs in val_set if vs.split("/")[13] == "Smartphone"]
 #val_set_v = [vs for vs in val_set if vs.split("/")[13] == "VehicleLCD"]
@@ -53,15 +51,16 @@ img_size=(224,224)
 #                'Tablet':val_set_t
 #                }
 
-base = "/media/di2/T7/"
-val_set = glob(base+"*.mp4")
+#base = "/media/di2/T7/"
+base = './'
+#val_set = glob(base+"*.mp4")
 print(len(val_set))
 nframes=32
 sampling_freq=8
 #for device in devices[:3]:
 #if True:
-video_last=1
-with open("all_vid_dataset.txt", "w") as f:
+video_last=12132
+with open("annotation/set_2.txt", "w") as f:
     out_base = base+ f"all_clips/"
     #video_last = len(glob(base + f"all_clips/v*/frame_15.png"))
     #n_lists = len(glob(base+"clip_list*.txt"))
