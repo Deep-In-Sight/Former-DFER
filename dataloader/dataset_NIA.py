@@ -100,13 +100,14 @@ class VideoDataset(data.Dataset):
         return len(self.video_list)
 
 
-def train_data_loader(project_dir="./", data_set=1):
+def train_data_loader(list_path="./annotation/set_0_train.txt"):
     image_size = 112 # cropped image size
     train_transforms = torchvision.transforms.Compose([GroupRandomSizedCrop(image_size),
                                                        GroupRandomHorizontalFlip(),
                                                        Stack(),
                                                        ToTorchFormatTensor()])
-    train_data = VideoDataset(list_file=project_dir+"annotation/set_"+str(data_set)+"_train.txt",
+        
+    train_data = VideoDataset(list_file=list_path,
                               num_segments=8,
                               duration=2,
                               mode='train',
@@ -115,12 +116,12 @@ def train_data_loader(project_dir="./", data_set=1):
     return train_data
 
 
-def test_data_loader(project_dir="./", data_set=1):
+def test_data_loader(list_path="./annotation/set_0_test.txt", data_set=1):
     image_size = 112
     test_transform = torchvision.transforms.Compose([GroupResize(image_size),
                                                      Stack(),
                                                      ToTorchFormatTensor()])
-    test_data = VideoDataset(list_file=project_dir+"annotation/set_"+str(data_set)+"_test.txt",
+    test_data = VideoDataset(list_file=list_path,
                              num_segments=8,
                              duration=2,
                              mode='test',
